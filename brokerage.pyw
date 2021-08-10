@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter.constants import W
+from tkinter.font import Font
 from ttkwidgets.autocomplete import AutocompleteEntry
 from tkcalendar import DateEntry
 import database as db
@@ -16,43 +17,18 @@ TRANSACTION_CHARGES = 0.00275 / 100
 GST = 18 / 100
 
 root = tk.Tk()
-root.geometry("580x600")
+root.geometry("580x730")
 root.title("Brokerage calculator")
 frame = ttk.Frame(root)
 
 style = ttk.Style()
 
 style.configure('Treeview', font = FONT, rowheight=30)
+style.configure('my.Radiobutton', font = FONT)
 
 font = {
     'font': FONT
 }
-
-
-buy_price_label = ttk.Label(frame, text="Buy Price", **font)
-buy_price_var = tk.StringVar(frame)
-buy_price_entry = ttk.Entry(frame, textvariable=buy_price_var, width=10,**font)
-buy_price_label.grid(row=2, column=0,pady=6, padx=30)
-buy_price_entry.grid(row=3, column=0,pady=2, padx=30)
-
-sell_price_label = ttk.Label(frame, text="Sell Price", **font)
-sell_price_var = tk.StringVar(frame)
-sell_price_entry = ttk.Entry(frame, textvariable=sell_price_var, width=10,**font)
-sell_price_label.grid(row=2, column=1,pady=6, padx=30)
-sell_price_entry.grid(row=3, column=1,pady=2, padx=30)
-
-shares_label = ttk.Label(frame, text="Shares", **font)
-shares_var = tk.StringVar(frame)
-shares_entry = ttk.Entry(frame, textvariable=shares_var, width=10,**font)
-shares_label.grid(row=2, column=2,pady=6, padx=30)
-shares_entry.grid(row=3, column=2,pady=2, padx=30)
-
-
-brokerage_label = ttk.Label(frame, text="Brokerage", **font)
-brokerage_var = tk.StringVar(frame)
-brokerage_entry = ttk.Entry(frame, textvariable=brokerage_var, width=10,**font)
-brokerage_label.grid(row=0, column=2,pady=6, padx=30)
-brokerage_entry.grid(row=1, column=2,pady=2, padx=30)
 
 script_label = ttk.Label(frame, text="script", **font)
 script_var = tk.StringVar(frame)
@@ -69,11 +45,43 @@ date_entry = DateEntry(frame, textvariable=date_var, width=9,
 date_label.grid(row=0, column=1,pady=6, padx=30)
 date_entry.grid(row=1, column=1,pady=2, padx=30)
 
-sl_amt_label = ttk.Label(frame, text="sl_amt", **font)
+brokerage_label = ttk.Label(frame, text="Brokerage", **font)
+brokerage_var = tk.StringVar(frame)
+brokerage_entry = ttk.Entry(frame, textvariable=brokerage_var, width=10,**font)
+brokerage_label.grid(row=0, column=2,pady=6, padx=30)
+brokerage_entry.grid(row=1, column=2,pady=2, padx=30)
+
+entry_price_label = ttk.Label(frame, text="Entry Price", **font)
+entry_price_var = tk.StringVar(frame)
+entry_price_entry = ttk.Entry(frame, textvariable=entry_price_var, width=10,**font)
+entry_price_label.grid(row=2, column=0,pady=6, padx=30)
+entry_price_entry.grid(row=3, column=0,pady=2, padx=30)
+
+exit_price_label = ttk.Label(frame, text="Exit Price", **font)
+exit_price_var = tk.StringVar(frame)
+exit_price_entry = ttk.Entry(frame, textvariable=exit_price_var, width=10,**font)
+exit_price_label.grid(row=2, column=1,pady=6, padx=30)
+exit_price_entry.grid(row=3, column=1,pady=2, padx=30)
+
+shares_label = ttk.Label(frame, text="Shares", **font)
+shares_var = tk.StringVar(frame)
+shares_entry = ttk.Entry(frame, textvariable=shares_var, width=10,**font)
+shares_label.grid(row=2, column=2,pady=6, padx=30)
+shares_entry.grid(row=3, column=2,pady=2, padx=30)
+
+
+sl_amt_label = ttk.Label(frame, text="SL Price", **font)
 sl_amt_var = tk.StringVar(frame)
 sl_amt_entry = ttk.Entry(frame, textvariable=sl_amt_var, width=10,**font)
-sl_amt_label.grid(row=4, column=1,pady=6, padx=30)
-sl_amt_entry.grid(row=5, column=1,pady=2, padx=30)
+sl_amt_label.grid(row=4, column=0,pady=6, padx=30)
+sl_amt_entry.grid(row=5, column=0,pady=2, padx=30)
+
+buy_sell = tk.StringVar(frame, value="buy")
+buy_rad = tk.Radiobutton(frame, text="Buy", variable=buy_sell,  value="buy", font=Font)
+buy_rad.grid(row=5, column=1,pady=2, padx=30)
+
+sell_rad = tk.Radiobutton(frame, text="Sell", variable=buy_sell, value="sell", font=Font)
+sell_rad.grid(row=5, column=2,pady=2, padx=30)
 
 frame.pack(pady=10)
 
@@ -93,7 +101,7 @@ if root.getvar('tk_patchLevel')=='8.6.9': #and OS_Name=='nt':
     style.map('Treeview', foreground=fixed_map('foreground'), background=fixed_map('background'))
 
 columns = ('Field', 'Amount')
-main_tree = ttk.Treeview(root, columns=columns, show="headings")
+main_tree = ttk.Treeview(root, height=12, columns=columns, show="headings")
 main_tree.heading('Field', text='')
 main_tree.heading('Amount', text='')    
 
@@ -111,11 +119,13 @@ def save():
 
 
 def calc():
-    buy_price = float(buy_price_var.get())
-    sell_price = float(sell_price_var.get())
+    entry_price = float(entry_price_var.get())
+    exit_price = float(exit_price_var.get())
+    sl_price = float(sl_amt_var.get())
+    buy_sell_val = buy_sell.get()
     shares = float(shares_var.get())
     brokerage_rate = float(brokerage_var.get()) / 100
-    turn_over = round((buy_price * shares) + (sell_price * shares), 2)
+    turn_over = round((entry_price * shares) + (exit_price * shares), 2)
     brokerage = round(brokerage_rate * turn_over, 2)
     stt = round(STT_RATE * turn_over, 2)
     sebi = round(SEBI_TURNOVER_RATE * turn_over, 2)
@@ -123,9 +133,11 @@ def calc():
     transaction_charges = round(TRANSACTION_CHARGES * turn_over, 2)
     gst = round(GST * brokerage, 2)
     total_tax = round(brokerage + stt + sebi + stamp_duty + transaction_charges + gst, 2)
-    profit = round((sell_price - buy_price) * shares, 2)
+    profit = round((exit_price - entry_price) * shares, 2) if buy_sell_val == "buy" else round((entry_price - exit_price) * shares, 2)
+    loss = round((sl_price - entry_price) * shares, 2) if buy_sell_val == "buy" else round((exit_price - sl_price) * shares, 2)
     net_profit = round(profit - total_tax, 2)
-    return buy_price, sell_price, shares, brokerage_rate, turn_over, brokerage, stt, sebi, stamp_duty, transaction_charges, gst, total_tax, profit, net_profit
+    rr = abs(round(profit / loss, 2))
+    return entry_price, exit_price, shares, brokerage_rate, turn_over, brokerage, stt, sebi, stamp_duty, transaction_charges, gst, total_tax, profit, loss, net_profit, rr
 
 def display():
     data = calc()
@@ -141,11 +153,13 @@ def display():
     if data[12] < 0:
         tag_val = "red" 
     else: tag_val = "green"
-    if data[13] < 0:
+    if data[14] < 0:
         tag_val_net = "red" 
     else: tag_val_net = "green"
     main_tree.insert('', index='end', text='', values=('Profit', data[12]), tags=tag_val)
-    main_tree.insert('', index='end', text='', values=('Net Profit', data[13]), tags=tag_val_net)
+    main_tree.insert('', index='end', text='', values=('Loss', data[13]))
+    main_tree.insert('', index='end', text='', values=('Net Profit', data[14]), tags=tag_val_net)
+    main_tree.insert('', index='end', text='', values=('Risk Reward', data[15]))
 
 main_tree.pack(pady=10)
 
