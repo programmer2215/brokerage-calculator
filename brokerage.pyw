@@ -32,32 +32,33 @@ font = {
 buy_price_label = ttk.Label(frame, text="Buy Price", **font)
 buy_price_var = tk.StringVar(frame)
 buy_price_entry = ttk.Entry(frame, textvariable=buy_price_var, width=10,**font)
-buy_price_label.grid(row=0, column=0,pady=6, padx=30)
-buy_price_entry.grid(row=1, column=0,pady=2, padx=30)
+buy_price_label.grid(row=2, column=0,pady=6, padx=30)
+buy_price_entry.grid(row=3, column=0,pady=2, padx=30)
 
 sell_price_label = ttk.Label(frame, text="Sell Price", **font)
 sell_price_var = tk.StringVar(frame)
 sell_price_entry = ttk.Entry(frame, textvariable=sell_price_var, width=10,**font)
-sell_price_label.grid(row=0, column=1,pady=6, padx=30)
-sell_price_entry.grid(row=1, column=1,pady=2, padx=30)
+sell_price_label.grid(row=2, column=1,pady=6, padx=30)
+sell_price_entry.grid(row=3, column=1,pady=2, padx=30)
 
 shares_label = ttk.Label(frame, text="Shares", **font)
 shares_var = tk.StringVar(frame)
 shares_entry = ttk.Entry(frame, textvariable=shares_var, width=10,**font)
-shares_label.grid(row=2, column=0,pady=6, padx=30)
-shares_entry.grid(row=3, column=0,pady=2, padx=30)
+shares_label.grid(row=2, column=2,pady=6, padx=30)
+shares_entry.grid(row=3, column=2,pady=2, padx=30)
+
 
 brokerage_label = ttk.Label(frame, text="Brokerage", **font)
 brokerage_var = tk.StringVar(frame)
 brokerage_entry = ttk.Entry(frame, textvariable=brokerage_var, width=10,**font)
-brokerage_label.grid(row=2, column=1,pady=6, padx=30)
-brokerage_entry.grid(row=3, column=1,pady=2, padx=30)
+brokerage_label.grid(row=0, column=2,pady=6, padx=30)
+brokerage_entry.grid(row=1, column=2,pady=2, padx=30)
 
 script_label = ttk.Label(frame, text="script", **font)
 script_var = tk.StringVar(frame)
 script_entry = AutocompleteEntry(frame, textvariable=script_var, width=10, completevalues=SCRIPTS,font=FONT)
-script_label.grid(row=0, column=2,pady=6, padx=30)
-script_entry.grid(row=1, column=2,pady=2, padx=30)
+script_label.grid(row=0, column=0,pady=6, padx=30)
+script_entry.grid(row=1, column=0,pady=2, padx=30)
 
 date_label = ttk.Label(frame, text="date", **font)
 date_var = tk.StringVar(frame)
@@ -65,8 +66,14 @@ date_entry = DateEntry(frame, textvariable=date_var, width=9,
     background='darkblue', foreground='white', 
     borderwidth=2, year=2021, font=FONT)
 
-date_label.grid(row=2, column=2,pady=6, padx=30)
-date_entry.grid(row=3, column=2,pady=2, padx=30)
+date_label.grid(row=0, column=1,pady=6, padx=30)
+date_entry.grid(row=1, column=1,pady=2, padx=30)
+
+sl_amt_label = ttk.Label(frame, text="sl_amt", **font)
+sl_amt_var = tk.StringVar(frame)
+sl_amt_entry = ttk.Entry(frame, textvariable=sl_amt_var, width=10,**font)
+sl_amt_label.grid(row=4, column=1,pady=6, padx=30)
+sl_amt_entry.grid(row=5, column=1,pady=2, padx=30)
 
 frame.pack(pady=10)
 
